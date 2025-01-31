@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.hilt.android)
+    alias(libs.plugins.google.devtools.ksp)
 
 }
 
@@ -63,12 +65,17 @@ dependencies {
     implementation(libs.logging.interceptor)
 
     // Glide
-    implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation(libs.glide)
 
 
     // Life-cycle
     implementation(libs.runtime)
     implementation(libs.viewmodel)
+
+//Hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
+
 
 
 
