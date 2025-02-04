@@ -54,14 +54,15 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
     // Retrofit
     implementation(libs.com.squareup.retrofit2.retrofit)
     implementation(libs.com.squareup.retrofit2.converter.gson)
 
-// Gson
+    // Gson
     implementation(libs.gson)
 
-// Logging Interceptor
+    // Logging Interceptor
     implementation(libs.logging.interceptor)
 
     // Glide
@@ -72,9 +73,14 @@ dependencies {
     implementation(libs.runtime)
     implementation(libs.viewmodel)
 
-//Hilt
+    //Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
+
+    //Room
+    implementation (libs.androidx.room.runtime)
+    implementation (libs.room.ktx)
+    ksp (libs.room.compiler)
 
 
 
