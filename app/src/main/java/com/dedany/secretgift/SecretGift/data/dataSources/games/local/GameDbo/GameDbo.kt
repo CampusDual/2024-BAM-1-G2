@@ -7,7 +7,6 @@ import com.dedany.secretgift.SecretGift.domain.entities.User
 import com.example.baseproject.domain.entities.RegisteredUser
 
 @Entity(tableName = "games")
-
 data class GameDbo(
     @PrimaryKey val id: String,
     val name: String,
