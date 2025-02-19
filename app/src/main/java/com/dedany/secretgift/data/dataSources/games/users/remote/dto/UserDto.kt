@@ -1,4 +1,8 @@
+<<<<<<<< Updated upstream:app/src/main/java/com/dedany/secretgift/data/dataSources/games/users/remote/dto/UserDto.kt
 package com.dedany.secretgift.data.dataSources.games.users.remote.dto
+========
+package com.dedany.secretgift.data.dataSources.users.remote.dto
+>>>>>>>> Stashed changes:app/src/main/java/com/dedany/secretgift/data/dataSources/users/remote/dto/UserDto.kt
 
 import com.google.gson.annotations.SerializedName
 
