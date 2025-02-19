@@ -45,7 +45,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/activity_horizontal_margin"
-        android:layout_marginBottom="@dimen/activity_bot_margin"
+        android:layout_marginBottom="@dimen/activity_button_margin"
         android:backgroundTint="#595454"
         android:text="Crear evento"
         android:textColor="#BC8D1A"
@@ -58,7 +58,7 @@
         android:layout_width="362dp"
         android:layout_height="328dp"
         android:layout_marginTop="@dimen/activity_top_margin"
-        android:layout_marginBottom="@dimen/activity_bot_margin"
+        android:layout_marginBottom="@dimen/activity_button_margin"
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation_main"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
