@@ -1,20 +1,15 @@
-<<<<<<<< Updated upstream:app/src/main/java/com/dedany/secretgift/data/dataSources/games/users/RoomDb.kt
+
 package com.dedany.secretgift.data.dataSources.games.users
-========
-package com.dedany.secretgift.data.dataSources
->>>>>>>> Stashed changes:app/src/main/java/com/dedany/secretgift/data/dataSources/RoomDb.kt
+
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
-<<<<<<<< Updated upstream:app/src/main/java/com/dedany/secretgift/data/dataSources/games/users/RoomDb.kt
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverter
 import androidx.room.TypeConverters
 import com.dedany.secretgift.data.dataSources.games.Converters
-========
-import androidx.room.RoomDatabase  // Corregido el error de importación
->>>>>>>> Stashed changes:app/src/main/java/com/dedany/secretgift/data/dataSources/RoomDb.kt
+
 import com.dedany.secretgift.data.dataSources.games.local.GameDbo.GameDbo
 import com.dedany.secretgift.data.dataSources.games.local.GamesDao
 

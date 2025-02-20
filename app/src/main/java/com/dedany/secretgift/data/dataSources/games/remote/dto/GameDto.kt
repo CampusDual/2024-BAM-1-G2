@@ -1,6 +1,5 @@
 package com.dedany.secretgift.data.dataSources.games.remote.dto
 
-import com.dedany.secretgift.data.dataSources.games.users.remote.dto.UserDto
 import com.google.gson.annotations.SerializedName
 import java.time.LocalDate
 

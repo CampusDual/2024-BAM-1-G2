@@ -1,6 +1,7 @@
 package com.dedany.secretgift.data.dataSources.users.local
 
-import com.dedany.secretgift.data.dataSources.users.local.UserDbo.UserDbo
+import com.dedany.secretgift.data.dataSources.games.users.local.UserDbo.UserDbo
+
 
 
 interface UserLocalDataSource {

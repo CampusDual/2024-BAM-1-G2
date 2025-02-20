@@ -2,7 +2,8 @@ package com.dedany.secretgift.data.dataSources.users.local
 
 import androidx.room.Dao
 import androidx.room.Query
-import com.dedany.secretgift.data.dataSources.users.local.UserDbo.UserDbo
+import com.dedany.secretgift.data.dataSources.games.users.local.UserDbo.UserDbo
+
 
 
 @Dao
