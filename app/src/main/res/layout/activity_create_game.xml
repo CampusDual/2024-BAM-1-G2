@@ -30,7 +30,7 @@
         android:layout_marginTop="@dimen/activity_top_margin"
         android:gravity="center"
         android:text="Nombre de la Sala:"
-        android:textColor="@color/brown"
+        android:textColor="#835B18"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -74,7 +74,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:contentDescription="Añadir participantes"
-        android:src="@drawable/baseline_add_circle_24"
+        android:src="@drawable/icon_add"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_add_people" />
@@ -88,15 +88,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btn_add"
-        tools:listitem="@layout/item_element_list"/>
+        tools:listitem="@layout/item_element_list"
+        tools:itemCount="3"
+        />
 
     <Button
         android:id="@+id/btn_ajustes_evento"
         android:layout_width="143dp"
         android:layout_height="46dp"
-        android:backgroundTint="#44543434"
+        android:backgroundTint="#2D2A28"
         android:text="Ajustes evento"
-        android:textColor="@color/brown"
+        android:textColor="#15110E"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/recyclerView" />
