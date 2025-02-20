@@ -1,4 +1,8 @@
+<<<<<<<< Updated upstream:app/src/main/java/com/dedany/secretgift/data/dataSources/games/users/local/UserDbo/UserDbo.kt
 package com.dedany.secretgift.data.dataSources.games.users.local.UserDbo
+========
+package com.dedany.secretgift.data.dataSources.users.local.UserDbo
+>>>>>>>> Stashed changes:app/src/main/java/com/dedany/secretgift/data/dataSources/users/local/UserDbo/UserDbo.kt
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
