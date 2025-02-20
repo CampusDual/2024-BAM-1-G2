@@ -1,8 +1,8 @@
 package com.dedany.secretgift.di
 
 import com.dedany.secretgift.domain.repositories.GamesRepository
-import com.dedany.secretgift.domain.useCases.games.GamesUseCase
-import com.dedany.secretgift.domain.useCases.games.GamesUseCaseImpl
+import com.dedany.secretgift.domain.usecases.games.GamesUseCase
+import com.dedany.secretgift.domain.usecases.games.GamesUseCaseImpl
 
 import dagger.Module
 import dagger.Provides
