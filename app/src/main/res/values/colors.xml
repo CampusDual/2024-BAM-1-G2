@@ -4,4 +4,9 @@
     <color name="white">#FFFFFFFF</color>
     <color name="brown">#835B18</color>
     <color name="navColor">#A0382A07</color>
+    <color name="editColor">#A99C57</color>
+    <color name="deleteColor">#96E08989</color>
+
+
+
 </resources>
