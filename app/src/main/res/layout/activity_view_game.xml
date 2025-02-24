@@ -1,4 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/background"
+        android:fitsSystemWindows="true">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            app:contentScrim="@color/background"
+            app:layout_scrollFlags="scroll|snap">
+
+            // LO QUE VA A SCROLLEAR
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+        // LO QUE SE VA A QUEDAR FIJO
+
+    </com.google.android.material.appbar.AppBarLayout>
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -139,7 +168,7 @@
         android:id="@+id/view_game_settings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
         android:backgroundTint="#A05F5540"
         android:orientation="vertical"
         app:cardCornerRadius="16dp"
@@ -149,7 +178,7 @@
         app:contentPaddingTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/players_recycler_view"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:strokeColor="#835B18"
 
         app:strokeWidth="2dp">
