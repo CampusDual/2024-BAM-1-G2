@@ -1,12 +1,12 @@
 package com.dedany.secretgift.data.dataSources.games.remote
 
 import com.dedany.secretgift.data.dataSources.errorHandler.ErrorDto
-import com.dedany.secretgift.data.dataSources.errorHandler.NetworkErrorDto
 import com.dedany.secretgift.data.dataSources.games.remote.api.SecretGiftApi
 import com.dedany.secretgift.data.dataSources.games.remote.dto.CreateGameDto
 import com.dedany.secretgift.data.dataSources.games.remote.dto.GameDto
 import com.dedany.secretgift.data.dataSources.games.remote.dto.GameSummaryDto
 import com.dedany.secretgift.data.dataSources.games.remote.dto.SendEmailToPlayerDto
+import com.dedany.secretgift.data.dataSources.users.local.preferences.UserPreferences
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import okhttp3.ResponseBody
@@ -16,9 +16,9 @@ import java.net.UnknownHostException
 import javax.inject.Inject
 
 class GameRemoteDataSourceImpl @Inject constructor(
-    private val gamesApi: SecretGiftApi
-) : GameRemoteDataSource {
-
+    private val gamesApi: SecretGiftApi,
+    private val userPreferences: UserPreferences
+):GameRemoteDataSource {
     override suspend fun getGame(gameCode: String): GameDto {
         val response = try {
             gamesApi.getGameByAccessCode(gameCode)
@@ -30,20 +30,17 @@ class GameRemoteDataSourceImpl @Inject constructor(
         } else {
             throw handleError(response.errorBody())
         }
+
     }
 
-    override suspend fun getGamesByUser(userId: String): List<GameSummaryDto> {
-        val response = try {
-            gamesApi.getGamesByUser(userId)
-        } catch (e: Exception) {
-            throw handleNetworkError(e)
-        }
-        return if (response.isSuccessful) {
-            response.body()?.data ?: emptyList()
-        } else {
-            throw handleError(response.errorBody())
-        }
-    }
+
+    override suspend fun getOwnedGamesByUser(): List<GameSummaryDto> {
+
+        val userId = userPreferences.getUserId()
+
+        if (userId.isEmpty()) {
+            throw Exception("User ID not found in preferences")
+
 
     override suspend fun createGame(game: CreateGameDto): Boolean {
         val response = try {
@@ -54,16 +51,18 @@ class GameRemoteDataSourceImpl @Inject constructor(
         return response.isSuccessful
     }
 
-    override suspend fun deleteGame(gameId: String): Boolean {
-        val response = try {
-            gamesApi.deleteGame(gameId)
-        } catch (e: Exception) {
-            throw handleNetworkError(e)
+    override suspend fun deleteGame(gameId: String, userId: String): Boolean {
+        val response = gamesApi.deleteGame(gameId, userId)
+        if (response.isSuccessful) {
+            return true
+        } else {
+            return false
+//            throw Exception("Error eliminando el juego: ${response.errorBody()?.string()}")
         }
-        return response.isSuccessful
     }
 
     override suspend fun updateGame(game: GameDto) {
+        TODO("Not yet implemented")
     }
 
     override suspend fun sendMailToPlayer(sendEmailToPlayerDto: SendEmailToPlayerDto): Boolean {
@@ -75,6 +74,23 @@ class GameRemoteDataSourceImpl @Inject constructor(
         return response.isSuccessful
     }
 
+    override suspend fun getPlayedGamesByUser(): List<GameSummaryDto> {
+        val userId = userPreferences.getUserId()
+
+        if (userId.isEmpty()) {
+            throw Exception("User ID not found in preferences")
+        }
+        val response = gamesApi.getPlayedGamesByUser(userId)
+
+        if (response.isSuccessful) {
+            return response.body()?.data ?: emptyList()
+        } else {
+            throw Exception("Error fetching games played by user: ${response.errorBody()?.string()}")
+        }
+    }
+
+
+}
     private fun handleNetworkError(e: Exception): NetworkErrorDto {
         return when (e) {
             is UnknownHostException -> NetworkErrorDto.NoInternetConnection

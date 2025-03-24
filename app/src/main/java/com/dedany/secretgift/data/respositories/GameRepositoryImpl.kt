@@ -1,6 +1,5 @@
 package com.dedany.secretgift.data.respositories
 
-import android.database.sqlite.SQLiteException
 import android.util.Log
 import com.dedany.secretgift.data.dataSources.games.local.LocalDataSource
 import com.dedany.secretgift.data.dataSources.games.local.gameDbo.GameDbo
@@ -16,7 +15,6 @@ import com.dedany.secretgift.data.dataSources.games.remote.dto.PlayerDto
 import com.dedany.secretgift.data.dataSources.games.remote.dto.SendEmailToPlayerDto
 import com.dedany.secretgift.data.dataSources.games.remote.dto.UserRegisteredDto
 import com.dedany.secretgift.data.dataSources.users.local.preferences.UserPreferences
-import com.dedany.secretgift.data.respositories.errorHandler.GameRepositoryError
 import com.dedany.secretgift.domain.entities.CreateGame
 import com.dedany.secretgift.domain.entities.CreatePlayer
 import com.dedany.secretgift.domain.entities.Game
@@ -28,7 +26,6 @@ import com.dedany.secretgift.domain.entities.User
 import com.dedany.secretgift.domain.repositories.GamesRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -42,11 +39,13 @@ class GameRepositoryImpl @Inject constructor(
 
     override suspend fun getGame(gameCode: String): Game {
         return withContext(Dispatchers.IO) {
+
             try {
                 val gameDto = remoteDataSource.getGame(gameCode)
-                gameDto.toDomain()
+                return@withContext gameDto.toDomain()
             } catch (e: Exception) {
-                throw handleRepositoryError(e)
+                Log.e("getGame", "Error obteniendo juego: ${e.message}")
+                throw e
             }
         }
     }
@@ -55,9 +54,10 @@ class GameRepositoryImpl @Inject constructor(
         return withContext(Dispatchers.IO) {
             try {
                 val gameDbo = localDataSource.getLocalGame(gameId)
-                gameDbo.toDomain()
+                return@withContext gameDbo.toDomain()
             } catch (e: Exception) {
-                throw handleRepositoryError(e)
+                Log.e("getLocalGame", "Error obteniendo juego de borrador: ${e.message}")
+                throw e
             }
         }
     }
@@ -65,24 +65,30 @@ class GameRepositoryImpl @Inject constructor(
     override suspend fun getLocalGameById(id: Int): LocalGame {
         return withContext(Dispatchers.IO) {
             try {
-                localDataSource.getLocalGameById(id).toDomain()
+                val gameDbo = localDataSource.getLocalGameById(id) // Método en el LocalDataSource
+                if (gameDbo != null) {
+                    return@withContext gameDbo.toDomain()
+                } else {
+                    // Maneja el caso en que no se encontró el juego
+                    Log.e("getGameById", "Juego no encontrado con el id: $id")
+                    throw Exception("Juego no encontrado con el id: $id")
+                }
             } catch (e: Exception) {
-                throw handleRepositoryError(e)
+                Log.e("getGameById", "Error obteniendo juego por id: ${e.message}")
+                throw e
             }
         }
     }
 
-    override suspend fun getGamesByUser(): List<GameSummary> {
-        val userId = userPreferences.getUserId()
-        if (userId.isEmpty()) {
-            throw GameRepositoryError.UserNotFoundError()
-        }
 
+    override suspend fun getOwnedGamesByUser(): List<GameSummary> {
         return withContext(Dispatchers.IO) {
             try {
-                remoteDataSource.getGamesByUser(userId).map { it.toDomain() }
+                val gamesSummaryDto = remoteDataSource.getOwnedGamesByUser()
+                return@withContext gamesSummaryDto.map { it.toDomainAsOwned() }
             } catch (e: Exception) {
-                throw handleRepositoryError(e)
+                Log.e("getGamesByUser", "Error obteniendo juegos: ${e.message}")
+                return@withContext emptyList<GameSummary>()
             }
         }
     }
@@ -91,75 +97,67 @@ class GameRepositoryImpl @Inject constructor(
         return withContext(Dispatchers.IO) {
             try {
                 val userId = userPreferences.getUserId()
-                localDataSource.getLocalGamesByUser(userId).map { it.toDomain() }
+                val gamesDbo = localDataSource.getLocalGamesByUser(userId)
+                return@withContext gamesDbo.map { it.toDomain() }
             } catch (e: Exception) {
-                throw handleRepositoryError(e)
+                Log.e("getGamesByUser", "Error obteniendo juegos: ${e.message}")
+                return@withContext emptyList<LocalGame>()
             }
         }
     }
 
-    override suspend fun sendMailToPlayer(gameId: String, playerId: String, playerEmail: String): Boolean {
-        val sendEmailToPlayerDto = SendEmailToPlayerDto(gameId, playerId, playerEmail)
-        return try {
-            remoteDataSource.sendMailToPlayer(sendEmailToPlayerDto)
-        } catch (e: Exception) {
-            throw handleRepositoryError(e)
-        }
+    override suspend fun deleteAllGames(): Boolean {
+        return localDataSource.deleteAllGames()
     }
 
-    override suspend fun deleteAllGames(): Boolean {
-        return try {
-            localDataSource.deleteAllGames()
-        } catch (e: Exception) {
-            throw handleRepositoryError(e)
+    override suspend fun sendMailToPlayer(
+        gameId: String,
+        playerId: String,
+        playerEmail: String
+    ): Boolean {
+        val sendEmailToPlayerDto =
+            SendEmailToPlayerDto(gameId, playerId, playerEmail)
+        return remoteDataSource.sendMailToPlayer(sendEmailToPlayerDto)
+    }
+
+    override suspend fun getPlayedGamesByUser(): List<GameSummary> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val gamesSummaryDto = remoteDataSource.getPlayedGamesByUser()
+                return@withContext gamesSummaryDto.map { it.toDomain() }
+            } catch (e: Exception) {
+                Log.e("getGamesByUser", "Error obteniendo juegos: ${e.message}")
+                return@withContext emptyList<GameSummary>()
+            }
         }
     }
 
     override suspend fun deleteLocalGame(gameId: Int): Boolean {
-        return try {
-            localDataSource.deleteGame(gameId)
-        } catch (e: Exception) {
-            throw handleRepositoryError(e)
-        }
+        return localDataSource.deleteGame(gameId)
     }
 
     override suspend fun createLocalGame(game: LocalGame): Long {
-        return try {
-            localDataSource.createGame(game.toDbo())
-        } catch (e: Exception) {
-            throw handleRepositoryError(e)
-        }
+        return localDataSource.createGame(game.toDbo())
     }
 
     override suspend fun updateLocalGame(game: LocalGame): Int {
-        return try {
-            localDataSource.updateGame(game.toDbo())
-        } catch (e: Exception) {
-            throw handleRepositoryError(e)
-        }
+        return localDataSource.updateGame(game.toDbo())
     }
 
     override suspend fun createGame(game: CreateGame): Boolean {
-        return try {
-            val gameDto = game.toDto()
-            remoteDataSource.createGame(gameDto)
-        } catch (e: Exception) {
-            throw handleRepositoryError(e)
-        }
+        val gameDto = game.toDto()
+        return remoteDataSource.createGame(gameDto)
     }
 
-    override suspend fun deleteGame(gameId: String): Boolean {
-        return try {
-            remoteDataSource.deleteGame(gameId)
-        } catch (e: Exception) {
-            throw handleRepositoryError(e)
-        }
-    }
 
     override suspend fun updateGame(game: Game) {
-        // Lógica de actualización si es necesario
+//        val gameDto = game.toDto()
+//        remoteDataSource.updateGame(gameDto)
     }
 
+    override suspend fun deleteGame(gameId: String, userId: String): Boolean {
+        return remoteDataSource.deleteGame(gameId, userId)
+    }
     private fun handleRepositoryError(e: Exception): GameRepositoryError {
         return when (e) {
             is SQLiteException -> {
@@ -176,6 +174,7 @@ class GameRepositoryImpl @Inject constructor(
             }
         }
     }
+
 
     private fun GameDto.toDomain(): Game {
         return Game(
