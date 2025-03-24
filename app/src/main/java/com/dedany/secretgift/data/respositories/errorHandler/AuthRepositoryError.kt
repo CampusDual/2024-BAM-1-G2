@@ -1,4 +1,8 @@
-package com.dedany.secretgift.data.respositories.errorHandler
+package com.dedany.secretgift.domain.errors
 
-class AuthRepositoryError {
+sealed class AuthRepositoryError(message: String) : Exception(message) {
+    class InvalidCredentialsError(message: String) : AuthRepositoryError(message)
+    class NetworkError(message: String) : AuthRepositoryError(message)
+    class UserNotFoundError(message: String) : AuthRepositoryError(message)
+    class UnexpectedError(message: String) : AuthRepositoryError(message)
 }

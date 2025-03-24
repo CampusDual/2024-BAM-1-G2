@@ -15,7 +15,7 @@ class LocalDataSourceImpl @Inject constructor(
         return gamesDao.getGame(gameId)
     }
 
-    override suspend fun getLocalGameById(id: Int): GameDbo?{
+    override suspend fun getLocalGameById(id: Int): GameDbo {
         return gamesDao.getLocalGameById(id)
     }
 
